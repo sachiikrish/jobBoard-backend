@@ -27,14 +27,14 @@ const login = async (req, res) => {
 
     res.cookie("refreshToken", refreshToken, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "development",
-      sameSite: "Strict",
+      secure: process.env.NODE_ENV === "production", // Secure=true only in production
+      sameSite: process.env.NODE_ENV === "production" ? "None" : "Lax", // None for production, Lax for local
       path: "/",
     });
 
     res
       .status(200)
-      .json({ message: "Login Successful!", accessToken: accessToken});
+      .json({ message: "Login Successful!", accessToken: accessToken });
   } catch (error) {
     console.error("Error in login: ", error.message);
     res.status(500).json({ message: "Internal Server Error" });
