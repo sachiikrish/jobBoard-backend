@@ -22,7 +22,7 @@ const nodemailer = require("nodemailer");
 const { CloudinaryStorage } = require("multer-storage-cloudinary");
 
 const conn = mongoose.connect(
-  `mongodb+srv://krish1234:attackOnTitan@jobboard.zwypm.mongodb.net/`
+  process.env.MONGODB_URI
 );
 
 //Middlewares
