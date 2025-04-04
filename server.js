@@ -17,13 +17,9 @@ const cloudinary = require("cloudinary").v2;
 const multer = require("multer");
 const nodemailer = require("nodemailer");
 
-
-
 const { CloudinaryStorage } = require("multer-storage-cloudinary");
 
-const conn = mongoose.connect(
-  process.env.MONGODB_URI
-);
+const conn = mongoose.connect(process.env.MONGODB_URI);
 
 //Middlewares
 app.use(
@@ -46,10 +42,16 @@ app.set("views", path.join(__dirname, "views"));
 //Routes
 app.use("/", router);
 
-app.use(express.static(path.join(__dirname, "../job_board/build")));
-app.get("*", (req, res) => {
-  res.sendFile(path.join(__dirname, "../job_board/build", "index.html"));
-});
+const isLocal = process.env.NODE_ENV === "development";
+
+if (isLocal) {
+  app.use(express.static(path.join(__dirname, "../job_board/build")));
+  app.get("*", (req, res) => {
+    res.sendFile(path.join(__dirname, "../job_board/build", "index.html"));
+  });
+} else {
+  console.log("Running in PRODUCTION mode: Frontend served separately.");
+}
 
 app.listen(port, () => {
   console.log(`your backend server is being listened at the port = ${port}`);
